@@ -1,0 +1,35 @@
+
+cxx = clang++
+ld  = clang++
+
+cc_flags = -Wall -Werror -O2
+lib_glfw = -lglfw
+
+src = src
+obj = obj
+out = out
+
+
+pool link_pool
+    depth = 4
+
+
+rule cxx
+    depfile = $out.d
+    command = $cxx -c $cc_flags -std=c++14 -o $out $in
+
+
+rule link
+    command = $ld -o $out $in $lib_glfw -lGLU -lGL
+    #-Wl,no-as-needed $lib_glfw -lGLU 
+
+
+build $obj/main.obj: cxx $src/main.cpp
+build $out/a.out: link $obj/main.obj
+
+#build all: phony ./obj/main.obj
+build all: phony $out/a.out
+
+default all
+
+
